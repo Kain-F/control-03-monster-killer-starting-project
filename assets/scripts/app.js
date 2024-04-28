@@ -7,15 +7,44 @@ const HEAL_VALUE = 7.5;
 let chosenMaxLife = 100;
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
+let hasBonusLife = true;
+let gameLog = [];
+
 
 attackBtn.addEventListener('click',attackHandler);
 strongAttackBtn.addEventListener('click',strongAttackHandler)
 healBtn.addEventListener('click',healPlayerHandler)
 
+function logGame(currentPlayerHealth,currentMonsterHealth){
+    // this code is just for logging
+    const healthDict = {
+        monsterHealth: currentMonsterHealth,
+        playerHealth: currentPlayerHealth
+    }
+    gameLog.push(healthDict)
+    console.log(gameLog)
+
+}
+
 function endRound(){
-    const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
-    currentPlayerHealth -= playerDamage
+    const initialPlayerHealth = currentPlayerHealth;
     
+    // this snippet executes the monster attack against the player 
+    const playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
+    currentPlayerHealth -= playerDamage;
+    
+    // the whole code snip underneath checks if the monster or player has won 
+    // or wether is was a draw and if needed it activates the bonus life
+
+    // we reset the player health to the health he had before he died if he has a bonus life 
+    if(currentPlayerHealth <= 0 && hasBonusLife){
+        currentPlayerHealth = initialPlayerHealth;
+        hasBonusLife = false;
+        removeBonusLife();
+        alert('You have lost!!!\n\nYour bonus life has activated, better luck this time');
+        setPlayerHealth(currentPlayerHealth);
+    }
+
     if (currentMonsterHealth <= 0 && currentPlayerHealth > 0) {
         alert('you won');
     } else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0){
@@ -24,11 +53,8 @@ function endRound(){
         alert('draw')
     }
     
-    let healthLog = {
-        monsterHealth: currentMonsterHealth,
-        playerHealth: currentPlayerHealth
-    }
-    console.log(healthLog)
+    // we log the round 
+    logGame(currentPlayerHealth,currentMonsterHealth);
 }
 
 
