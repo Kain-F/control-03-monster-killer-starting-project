@@ -58,6 +58,21 @@ function healPlayerHandler(){
     we will heal but the monster will still be able to hit us so we can 
     also die after healing
     */
-    increasePlayerHealth(HEAL_VALUE);
+   let healValue;
+   // we shouldnt be able to heal over our chosenMaxLife
+   // the code underneath basically sets a limit
+   // if our health is greater than that limit it means healing will get you a healthvalue equal or greater than the chosenMaxLife
+   if(currentPlayerHealth >= chosenMaxLife-HEAL_VALUE) {
+    alert("You can't heal to more than your max initial health");
+    // we will however heal the player to the chosenMaxLife
+    healValue = chosenMaxLife - currentPlayerHealth;
+   } else {
+    healValue = HEAL_VALUE;
+   }
+    
+   increasePlayerHealth(healValue);
+    // debug losing with full health
+    currentPlayerHealth += healValue;
+    console.log(currentPlayerHealth)
     endRound();
 }
